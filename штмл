@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Генератор паролей</title>
+</head>
+<body>
+    <h1>Генератор паролей</h1>
+    <form method="post">
+        <label>
+            Длина пароля:
+            <input type="number" name="length" min="4" max="64" value="12" />
+        </label><br/><br/>
+        <label>
+            Включить заглавные буквы:
+            <input type="checkbox" name="include_upper" checked />
+        </label><br/>
+        <label>
+            Включить цифры:
+            <input type="checkbox" name="include_digits" checked />
+        </label><br/>
+        <label>
+            Включить специальные символы:
+            <input type="checkbox" name="include_special" checked />
+        </label><br/><br/>
+        <button type="submit">Сгенерировать пароль</button>
+    </form>
+
+    {% if password %}
+        <h2>Ваш пароль:</h2>
+        <p><strong>{{ password }}</strong></p>
+        <button onclick="copyPassword()">Копировать пароль</button>
+    {% endif %}
+
+    <script>
+        function copyPassword() {
+            const passwordText = document.querySelector('strong');
+            navigator.clipboard.writeText(passwordText.innerText)
+                .then(() => alert('Пароль скопирован!'))
+                .catch(() => alert('Не удалось скопировать!'));
+        }
+    </script>
+</body>
+</html>
