@@ -3,42 +3,70 @@
 <head>
     <meta charset="UTF-8" />
     <title>Генератор паролей</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #FFF;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+        input[type=number] {
+            width: 80px;
+            padding: 5px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .passwords {
+            margin-top: 20px;
+            word-break: break-all;
+            font-size: 1.2em;
+        }
+        .password {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
-    <h1>Генератор паролей</h1>
-    <form method="post">
-        <label>
-            Длина пароля:
-            <input type="number" name="length" min="4" max="64" value="12" />
-        </label><br/><br/>
-        <label>
-            Включить заглавные буквы:
-            <input type="checkbox" name="include_upper" checked />
-        </label><br/>
-        <label>
-            Включить цифры:
-            <input type="checkbox" name="include_digits" checked />
-        </label><br/>
-        <label>
-            Включить специальные символы:
-            <input type="checkbox" name="include_special" checked />
-        </label><br/><br/>
-        <button type="submit">Сгенерировать пароль</button>
-    </form>
-
-    {% if password %}
-        <h2>Ваш пароль:</h2>
-        <p><strong>{{ password }}</strong></p>
-        <button onclick="copyPassword()">Копировать пароль</button>
-    {% endif %}
-
-    <script>
-        function copyPassword() {
-            const passwordText = document.querySelector('strong');
-            navigator.clipboard.writeText(passwordText.innerText)
-                .then(() => alert('Пароль скопирован!'))
-                .catch(() => alert('Не удалось скопировать!'));
-        }
-    </script>
+    <div class="container">
+        <h1>Генератор паролей</h1>
+        <form method="post">
+            <label for="length">Длина пароля:</label>
+            <input type="number" id="length" name="length" min="4" max="100" value="12" required />
+            <br />
+            <label for="count">Количество паролей:</label>
+            <input type="number" id="count" name="count" min="1" max="20" value="1" required />
+            <br />
+            <button type="submit">Сгенерировать</button>
+        </form>
+        {% if passwords %}
+            <div class="passwords">
+                <h2>Сгенерированные пароли:</h2>
+                {% for pw in passwords %}
+                    <div class="password">{{ pw }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
