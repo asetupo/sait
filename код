@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+    from flask import Flask, render_template, request, redirect, url_for, session
 import random
 import string
 import os
@@ -84,4 +84,3 @@ def generator():
     return render_template('index.html', passwords=passwords)
 
 if __name__ == '__main__':
-    app.run(debug=True)
