@@ -1,30 +1,31 @@
-    from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session
 import random
 import string
 import os
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Задайте свой секретный ключ
+app.secret_key = 'your_secret_key'  # Замените на свой секретный ключ
 
 USERS_FILE = 'users.txt'
+
+def generate_password(length):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    password = ''.join(random.choice(characters) for _ in range(length))
+    return password
 
 def load_users():
     users = {}
     if os.path.exists(USERS_FILE):
         with open(USERS_FILE, 'r') as f:
             for line in f:
-                username, password = line.strip().split(':', 1)
-                users[username] = password
+                if line.strip():
+                    username, password = line.strip().split(':', 1)
+                    users[username] = password
     return users
 
 def save_user(username, password):
     with open(USERS_FILE, 'a') as f:
         f.write(f'{username}:{password}\n')
-
-def generate_password(length):
-    characters = string.ascii_letters + string.digits + string.punctuation
-    password = ''.join(random.choice(characters) for _ in range(length))
-    return password
 
 @app.route('/')
 def home():
@@ -35,28 +36,27 @@ def home():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        password = request.form.get('password', '').strip()
+        username = request.form.get('username')
+        password = request.form.get('password')
         users = load_users()
         if username in users:
-            error = 'Пользователь уже существует.'
+            error = 'Пользователь уже существует'
             return render_template('register.html', error=error)
-        else:
-            save_user(username, password)
-            return redirect(url_for('login'))
+        save_user(username, password)
+        return redirect(url_for('login'))
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        password = request.form.get('password', '').strip()
+        username = request.form.get('username')
+        password = request.form.get('password')
         users = load_users()
         if username in users and users[username] == password:
             session['username'] = username
             return redirect(url_for('generator'))
         else:
-            error = 'Неверное имя или пароль.'
+            error = 'Неверный логин или пароль'
             return render_template('login.html', error=error)
     return render_template('login.html')
 
@@ -69,7 +69,6 @@ def logout():
 def generator():
     if 'username' not in session:
         return redirect(url_for('login'))
-
     passwords = []
     if request.method == 'POST':
         try:
@@ -84,3 +83,4 @@ def generator():
     return render_template('index.html', passwords=passwords)
 
 if __name__ == '__main__':
+    app.run(debug=True)
