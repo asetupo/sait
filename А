@@ -1,0 +1,109 @@
+from flask import Flask, render_template, request, redirect, url_for, session
+import random
+import string
+import os
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Замените на свой секретный ключ
+
+USERS_FILE = 'users.txt'
+CREDENTIALS_FILE = 'credentials.txt'  # Файл для хранения сайтов, логинов и паролей
+
+def generate_password(length):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    password = ''.join(random.choice(characters) for _ in range(length))
+    return password
+
+def load_users():
+    users = {}
+    if os.path.exists(USERS_FILE):
+        with open(USERS_FILE, 'r') as f:
+            for line in f:
+                if line.strip():
+                    username, password = line.strip().split(':', 1)
+                    users[username] = password
+    return users
+
+def save_user(username, password):
+    with open(USERS_FILE, 'a') as f:
+        f.write(f'{username}:{password}\n')
+
+def save_credentials(site, login, password):
+    with open(CREDENTIALS_FILE, 'a') as f:
+        f.write(f'{site}:{login}:{password}\n')
+
+@app.route('/')
+def home():
+    if 'username' in session:
+        return redirect(url_for('generator'))
+    return redirect(url_for('login'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        users = load_users()
+        if username in users:
+            error = 'Пользователь уже существует'
+            return render_template('register.html', error=error)
+        save_user(username, password)
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        users = load_users()
+        if username in users and users[username] == password:
+            session['username'] = username
+            return redirect(url_for('generator'))
+        else:
+            error = 'Неверный логин или пароль'
+            return render_template('login.html', error=error)
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
+@app.route('/generator', methods=['GET', 'POST'])
+def generator():
+    if 'username' not in session:
+        return редирект(url_for('логин'))
+    пароль = []
+    , если запрос.способ == 'пост':
+        попробовать:
+            длина = инт(запроса.форма.вам('длина', 12))
+            прикинь = инт(запроса.форма.вам ("количество", 1))
+            если граф &lt; 1:
+                счетчик = 1
+            Для _ в диапазоне(счет):
+                пароли.добавить(generate_password(длина))
+        , за исключением ValueError:
+            пароль = ['Ошибка: введите корректные числа']
+    возвращение render_template('index.html', пароль=пароль)
+
+# Новая страница для добавления сайта, логина и пароля
+@приложение.маршрут('/save_credentials', методы=['get'в, 'сообщение'])
+деф save_credentials_route():
+    если "имя пользователя" не в сессии:
+        возвращение редирект(url_for('логин'))
+    если запрос.способ == 'пост':
+        сайтов = запрос.форма.вам ("сайт")
+        login_cred = запрос.форма.вам('логин')
+        password_cred = запрос.форма.вам ("пароль"),
+        если сайт и login_cred и password_cred:
+            save_credentials(сайт, login_cred, password_cred)
+            сообщение = 'Данные успешно сохранены!'
+            return render_template('save_credentials.html', message=message)
+        else:
+            error = 'Пожалуйста, заполните все поля'
+            return render_template('save_credentials.html', error=error)
+    return render_template('save_credentials.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
