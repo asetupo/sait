@@ -1,28 +1,28 @@
-&lt;!DOCTYPE html&gt;
-&lt;html lang="ru"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8" /&gt;
-    &lt;title&gt;Добавить сайт&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;h2&gt;Добавить сайт и учетные данные&lt;/h2&gt;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Добавить сайт</title>
+</head>
+<body>
+    <h2>Добавить сайт и учетные данные</h2>
     {% if message %}
-        &lt;p style="color: green;"&gt;{{ message }}&lt;/p&gt;
+        <p style="color: green;">{{ message }}</p>
     {% endif %}
     {% if error %}
-        &lt;p style="color: red;"&gt;{{ error }}&lt;/p&gt;
+        <p style="color: red;">{{ error }}</p>
     {% endif %}
-    &lt;form method="post"&gt;
-        &lt;label&gt;URL сайта:&lt;/label&gt;&lt;br&gt;
-        &lt;input type="text" name="site_url" required&gt;&lt;br&gt;&lt;br&gt;
-        &lt;label&gt;Логин:&lt;/label&gt;&lt;br&gt;
-        &lt;input type="text" name="site_login" required&gt;&lt;br&gt;&lt;br&gt;
-        &lt;label&gt;Пароль:&lt;/label&gt;&lt;br&gt;
-        &lt;input type="text" name="site_password" required&gt;&lt;br&gt;&lt;br&gt;
-        &lt;button type="submit"&gt;Сохранить&lt;/button&gt;
-    &lt;/form&gt;
-    &lt;br&gt;
-    &lt;a href="{{ url_for('generator') }}"&gt;К генератору паролей&lt;/a&gt;&lt;br&gt;
-    &lt;a href="{{ url_for('logout') }}"&gt;Выйти&lt;/a&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+    <form method="post">
+        <label>URL сайта:</label><br>
+        <input type="text" name="site_url" required><br><br>
+        <label>Логин:</label><br>
+        <input type="text" name="site_login" required><br><br>
+        <label>Пароль:</label><br>
+        <input type="text" name="site_password" required><br><br>
+        <button type="submit">Сохранить</button>
+    </form>
+    <br>
+    <a href="{{ url_for('generator') }}">К генератору паролей</a><br>
+    <a href="{{ url_for('logout') }}">Выйти</a>
+</body>
+</html>
