@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Генератор паролей</title>
+</head>
+<body>
+    <h2>Генератор паролей</h2>
+    <form method="post">
+        <label>Длина пароля:</label>
+        <input type="number" name="length" value="12" min="1" /><br /><br />
+        <label>Количество паролей:</label>
+        <input type="number" name="count" value="1" min="1" /><br /><br />
+        <button type="submit">Генерировать</button>
+    </form>
+    {% if passwords %}
+        <h3>Сгенерированные пароли:</h3>
+        <ul>
+        {% for p in passwords %}
+            <li>{{ p }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <br />
+    <a href="{{ url_for('add_site') }}">Добавить сайт и учетные данные</a><br />
+    <a href="{{ url_for('logout') }}">Выйти</a>
+</body>
+</html>
